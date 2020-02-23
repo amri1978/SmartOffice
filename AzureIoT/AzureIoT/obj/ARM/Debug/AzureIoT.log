@@ -1,1 +1,0 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\MSBuild\Microsoft\VisualStudio\v16.0\CodeAnalysis\Microsoft.CodeAnalysis.targets(423,15): error MSB4086: La comparaison numérique tentée pour "$(PlatformToolsetVersion)" donne "" au lieu d'un chiffre, dans la condition "'$(PlatformToolsetVersion)'<'120'".
