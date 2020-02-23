@@ -6,7 +6,7 @@
   "CmdArgs": [ "0ne0009863F" ],
   "Capabilities": {
     "Uart": [ "ISU3" ],
-    "Gpio": [ 0, 4, 5, 8, 9, 10, 12, 13,16, 34 ],
+    "Gpio": [ 0, 4, 5, 8, 9, 10, 12, 13, 16, 17, 34],
     "AllowedConnections": [ "global.azure-devices-provisioning.net", "iotc-3db19085-1bb1-4127-a16f-31a10c943e29.azure-devices.net" ],
     "I2cMaster": [ "ISU2" ],
     "DeviceAuthentication": "fe1fc6d1-9eab-4553-99db-96fb2a3c9bb4"

@@ -126,6 +126,8 @@ static void SendPirMotionHandler(void);
 static bool deviceIsUp = false; // Orientation
 static void AzureTimerEventHandler(EventData *eventData);
 
+bool IsRoomOccupied = false;
+
 /// <summary>
 ///     Signal handler for termination requests. This handler must be async-signal-safe.
 /// </summary>
@@ -248,7 +250,7 @@ static int InitPeripheralsAndHandlers(void)
 
 
     // Set up a timer to poll for PIR events.
-    struct timespec pirCheckPeriod = {0, 1000 * 1000};
+    struct timespec pirCheckPeriod = {0, 198 * 1000 * 1000}; //every 198 milliseconds below Kemet sensor 200ms threshold
     pirPollTimerFd =
         CreateTimerFdAndAddToEpoll(epollFd, &pirCheckPeriod, &pirPollEventData, EPOLLIN);
     if (pirPollTimerFd < 0) {
@@ -562,7 +564,6 @@ void SendTemperature(void)
 /// </summary>
 /// <param name="fd">The pir file descriptor</param>
 /// <param name="oldState">Old state of the pir</param>
-/// <returns>true if pressed, false otherwise</returns>
 static bool IsMotionDetected(int fd, GPIO_Value_Type *oldState)
 {
     bool isMotionDetected = false;
@@ -572,12 +573,29 @@ static bool IsMotionDetected(int fd, GPIO_Value_Type *oldState)
         Log_Debug("ERROR: Could not read pir GPIO: %s (%d).\n", strerror(errno), errno);
         terminationRequired = true;
     } else {
-        // motion is detected if it is low and different than last known state.
+        // motion is detected if it is high and different than last known state.
 		isMotionDetected = (newState != *oldState) && (newState == GPIO_Value_Low);
         *oldState = newState;
     }
 
-    return isMotionDetected;
+    if (IsMotionDetected)
+        if (IsRoomOccupied)
+            IsRoomOccupied = false;
+        else
+            IsRoomOccupied = true;
+
+    return (isMotionDetected && IsRoomOccupied);
+}
+
+void Buzzer()
+{
+
+    void* relay = GroveRelay_Open(0);
+    const struct timespec sleepTime = { 0, 50 * 1000 * 1000 };
+    GroveRelay_On(relay);
+    nanosleep(&sleepTime, NULL);
+    GroveRelay_Off(relay);
+
 }
 
 /// <summary>
@@ -587,7 +605,10 @@ static bool IsMotionDetected(int fd, GPIO_Value_Type *oldState)
 static void SendPirMotionHandler(void)
 {
     if (IsMotionDetected(sendPirMotionGpioFd, &sendPirMotionState)) {
+        Buzzer()
         SendTelemetry("MotionDetected", "True");
     }
 }
+
+
 

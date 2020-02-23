@@ -55,3 +55,5 @@
 
 #define SAMPLE_RELAY_GPIO 37
 
+#define SAMPLE_BUZZER_GPIO 17
+
