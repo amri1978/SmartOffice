@@ -51,9 +51,12 @@
 // MT3620 RDB: Connect external NRF52 UART using header 2, pin 1 (RX), pin 3 (TX), pin 5 (CTS), pin 7 (RTS)
 #define SAMPLE_NRF52_UART MT3620_RDB_HEADER2_ISU0_UART
 
+// Kemet Sensor Comparator PIN
 #define SAMPLE_PIR_GPIO 16
 
+// Relay PIN
 #define SAMPLE_RELAY_GPIO 37
 
+//Buzzer PIN
 #define SAMPLE_BUZZER_GPIO 17
 
