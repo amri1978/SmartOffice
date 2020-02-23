@@ -1,5 +1,4 @@
-﻿/* Copyright (c) Microsoft Corporation. All rights reserved.
-   Licensed under the MIT License. */
+﻿/* Smart Office Main Program*/
 
 
 #pragma once
@@ -22,10 +21,6 @@
 #include <applibs/storage.h>
 #include "epoll_timerfd_utilities.h"
 
-
-// By default, this sample is targeted at the MT3620 Reference Development Board (RDB).
-// This can be changed using the project property "Target Hardware Definition Directory".
-// This #include imports the sample_hardware abstraction from that hardware definition.
 
 #include "sample_hardware.h"
 
@@ -171,7 +166,7 @@ int main(int argc, char *argv[])
 }
 
 /// <summary>
-/// Pir timer event:  Check the status of PIR
+/// Pir timer event:  Check the status of Kemet Sensor
 /// </summary>
 static void PirPollTimerEventHandler(EventData *eventData)
 {
@@ -232,7 +227,7 @@ static int InitPeripheralsAndHandlers(void)
 	}
 	
 	
-    // Open PIR GPIO as input
+    // Open kemet Sensor GPIO as input
     Log_Debug("Opening SAMPLE_PIR_GPIO as input\n");
     sendPirMotionGpioFd = GPIO_OpenAsInput(SAMPLE_PIR_GPIO);
     if (sendPirMotionGpioFd < 0) {
@@ -241,7 +236,7 @@ static int InitPeripheralsAndHandlers(void)
     }
 
 
-	// Open PIR GPIO as output
+	// Open Kemet Sensor GPIO as output
 	relay = GroveRelay_Open(SAMPLE_RELAY_GPIO);
 	if (relay == NULL) {
 		Log_Debug("ERROR: Could not open Relay GPIO: %s (%d).\n", strerror(errno), errno);
@@ -249,7 +244,7 @@ static int InitPeripheralsAndHandlers(void)
 	}
 
 
-    // Set up a timer to poll for PIR events.
+    // Set up a timer to poll for Kemet Sensor events.
     struct timespec pirCheckPeriod = {0, 198 * 1000 * 1000}; //every 198 milliseconds below Kemet sensor 200ms threshold
     pirPollTimerFd =
         CreateTimerFdAndAddToEpoll(epollFd, &pirCheckPeriod, &pirPollEventData, EPOLLIN);
